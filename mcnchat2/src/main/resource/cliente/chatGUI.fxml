@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.*?>
+<?import javafx.scene.canvas.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="505.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.cliente.util.CChatController">
+   <children>
+      <ImageView fx:id="imgBg" fitHeight="505.0" fitWidth="600.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="/img/Bg.jpg" />
+         </image>
+      </ImageView>
+      <ScrollPane fx:id="msgScroll" layoutX="16.0" layoutY="115.0" prefHeight="177.0" prefWidth="403.0">
+        <content>
+          <AnchorPane fx:id="msgBox" minHeight="0.0" minWidth="0.0" prefHeight="39.0" prefWidth="388.0" />
+        </content>
+      </ScrollPane>
+      <Label fx:id="lblBase" layoutX="26.0" layoutY="92.0" text="Para:" />
+      <TextArea fx:id="txtField" layoutX="16.0" layoutY="328.0" prefHeight="103.0" prefWidth="403.0" />
+      <Button fx:id="btnQuit" layoutX="343.0" layoutY="391.0" mnemonicParsing="false" onAction="#closeConnection" prefHeight="28.0" prefWidth="70.0" text="SAIR" />
+      <Button fx:id="btnSend" layoutX="343.0" layoutY="341.0" mnemonicParsing="false" onAction="#sendMessage" prefHeight="43.0" prefWidth="70.0" text="ENVIAR" />
+   </children>
+</AnchorPane>
