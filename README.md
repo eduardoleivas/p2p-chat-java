@@ -63,3 +63,4 @@ Após a obtenção destas informações, o ServerThread envia uma solicitação 
 > - Atualização automática da lista de amigos - (Melhor funcionamento e implementação do FXML, ou substituição por outra plataforma)
 > - Autenticação de IP ao conectar-se em outro cliente - (Cliente Remetente receber informação do IP correto a conectar-se, Cliente Destinatário autenticar-se ao solicitar conexão)
 > - Otimização do Código - (Limpeza geral, arrumação, reimplementação menos complexa de funcionalidades)
+> - Sistema de Envio de Arquivos via FTP - (Imagens, audios, videos... para outros contatos)
