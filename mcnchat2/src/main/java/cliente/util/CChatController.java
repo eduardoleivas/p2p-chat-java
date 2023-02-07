@@ -44,25 +44,25 @@ public class CChatController {
     private int dist = 20;
     private boolean firstMsg = true;
     
-    //INICIALIZA OS RECURSOS NECESSÁRIOS
+    //INITIALIZES NECESSARY RESOURCES
     public void initialize() throws IOException {
-        client = ConnectionFactory.getChat(); //INICIALIZA O SOCKET
+        client = ConnectionFactory.getChat(); //SOCKET INITIALIZATION
         dIn = new DataInputStream(client.getInputStream());
         dOut = new DataOutputStream(client.getOutputStream());
         Thread serverListener = new Thread(() -> {
             try {
                 while(true) {
-                    //RECEBE A MENSAGEM DO SERVIDOR
+                    //RECEIVES A MESSAGE FROM CONNECTED
                     String serverMsg = dIn.readUTF(); //LÊ A MENSAGEM DO INPUTSTREAM (CHARSET UTF)
                     if (!serverMsg.equals(lastMsg)) {
                         lastMsg = serverMsg;
                         
-                        //CASO O SERVIDOR RETORNE O USERNAME
+                        //IF CONNECTED SENDS USER DATA
                         if (serverMsg.contains("/username")) {
                             String user[] = serverMsg.split(",");
                             svUser = user[1];
 
-                        //CASO O SERVIDOR ENVIE /QUIT
+                        //IF CONNECTED SENDS /QUIT
                         } else if (serverMsg.equals("/quit")) {
                             dIn.close();
                             dOut.close();
@@ -96,7 +96,7 @@ public class CChatController {
         clUser = username;
     }
 
-    //ADICIONA A MENSAGEM RECEBIDA PELO CONTATO COMO LABEL NA BOX DO CHAT
+    //SHOWS RECEIVED MESSAGE ON THE CHAT BOX
     private void svAddLabel(String txt) {
         setClUser(((Stage) lblBase.getScene().getWindow()).getTitle());
         Label lblMsg = new Label(svUser + ": " + txt);
@@ -108,7 +108,7 @@ public class CChatController {
         msg++;
     }
 
-    //ADICIONA A MENSAGEM ENVIADA PARA O CONTATO COMO LABEL NA BOX DO CHAT
+    //SHOWS THE SENT MESSAGE ON THE CHAT BOX
     private void clAddLabel(String txt) {
         setClUser(((Stage) lblBase.getScene().getWindow()).getTitle());
         Label lblMsg = new Label(clUser + ": " + txt);
@@ -120,7 +120,7 @@ public class CChatController {
         msg++;
     }
 
-    @FXML //MÉTODO FECHAR CONEXÃO
+    @FXML //CLOSE CONNECTION METHOD
     void closeConnection(ActionEvent event) throws IOException {
         String quit = "/quit";
         dOut.writeUTF(quit); //ESCREVE MENSAGEM NO OUTPUTSTREAM (CHARSET UTF)
@@ -131,16 +131,16 @@ public class CChatController {
         chat.close();
     }
 
-    @FXML //MÉTODO ENVIAR MENSAGEM
+    @FXML //SEND MESSAGE METHO
     void sendMessage(ActionEvent event) {
         try {
             if(firstMsg) {
                 sendUser();
                 firstMsg = false;
             }
-            //CLIENTE ENVIA A MENSAGEM
+            //CLIENT SENDS THE MESSAGE
             String clientMsg = txtField.getText();
-            dOut.writeUTF(clientMsg); //ESCREVE MENSAGEM NO OUTPUTSTREAM (CHARSET UTF)
+            dOut.writeUTF(clientMsg); //WRITES MESSAGE ON OUTPUTSTREAM (UTF CHARSET)
             clAddLabel(clientMsg);
             txtField.clear();
         } catch (IOException e) {
@@ -148,12 +148,12 @@ public class CChatController {
         }
     }
 
-    //ENVIA A INFO DO USUÁRIO PARA O CONTATO
+    //SENDS USER INFO
     void sendUser() {
         try {
-            //SERVIDOR ENVIA A MENSAGEM
+            //SERVER SENDS THE MESSAGE
             String clientMsg = ((Stage) lblBase.getScene().getWindow()).getTitle();
-            dOut.writeUTF("/username," + clientMsg); //ESCREVE A MENSAGEM NO OUTPUT STREAM (CHARSET UTF)
+            dOut.writeUTF("/username," + clientMsg); //WRITES MESSAGE ON OUTPUTSTREAM (UTF CHARSET)
         } catch (IOException e) {
             e.printStackTrace();
         }
