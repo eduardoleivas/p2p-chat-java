@@ -21,7 +21,7 @@ public class client {
             is = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             os = new PrintWriter(socket.getOutputStream());
         } catch (IOException e) {
-            System.err.print("IO Exception");
+            e.printer
         }
 
         System.out.println("Mensagem: ");
@@ -39,57 +39,50 @@ public class client {
             os.flush();
             killAll(is, os, scanner, socket);
         } catch (IOException e) {
-            System.out.println("Erro no socket");
+        E.F
         }
     }
 
+    //MESSAGE PRE-PROCCESSING
     private static void checkMsg(String msg) {
-        //COMANDO LOGINSTATUS
+        
+        //COMMANDLOGINSTATUS
         if (msg.contains("/loginStatus:")) {
-            String[] msgContent = msg.split(":"); //SEPARA O COMANDO DOS ARGUMENTOS
+            String[] msgContent = msg.split(":"); //SPLITS COMMANDS FROM ARGUMENTS
+            
+            //USER SUCCESSFULLY LOGGED IN
             if (msgContent[1].equals("1")) {
-                //USUARIO LOGADO COM SUCESSO
                 user = new Usuario(-1, username);
-                System.out.println("Logado com Sucesso");
-            } else if (msgContent[1].equals("0")) {
-                //LOGIN INCORRETO
-                System.out.println("Login Incorreto");
-            } else {
-                //USUÁRIO JÁ LOGADO
-                System.out.println("Usuário já logado");
             }
         }
 
-        //COMANDO RETURNUSERID
+        //COMMAND RETURNUSERID
         if (msg.contains("/userIdReturn:")) {
-            String[] msgContent = msg.split(":"); //SEPARA O COMANDO DOS ARGUMENTOS
+            String[] msgContent = msg.split(":"); //SPLITS COMMANDS FROM ARGUMENTS
             int id = Integer.parseInt(msgContent[1]);
             user.setId_user(id);
         }
 
-        //COMANDO LOADFRIENDS
+        //COMMAND LOADFRIENDS
         if (msg.contains("/loadFriends:")) {
-            String[] msgContent = msg.split(":"); //SEPARA O COMANDO DOS ARGUMENTOS
-            String[] msgUsernames = msgContent[1].split(";"); //ARRAY COM OS AMIGOS
+            String[] msgContent = msg.split(":"); //SPLITS COMMANDS FROM ARGUMENTS
+            String[] msgUsernames = msgContent[1].split(";"); //FRIENDS STORED IN AN ARRAY
         }
         
-        //COMANDO LOADONLINEFRIENDS
+        //COMMAND LOADONLINEFRIENDS
         if (msg.contains("/loadOnlineFriends:")) {
-            String[] msgContent = msg.split(":"); //SEPARA O COMANDO DOS ARGUMENTOS
-            String[] msgUsernames = msgContent[1].split(";"); //ARRAY COM OS AMIGOS
-            for(int i=0; i<msgUsernames.length; i++) {
-                System.out.println(msgUsernames[i]);
-            }
+            String[] msgContent = msg.split(":"); //SPLITS COMMANDS FROM ARGUMENTS
+            String[] msgUsernames = msgContent[1].split(";"); //FRIENDS STORED IN AN AWWAY
         }
     }
 
+    //METHD TO DESTROY ALL RESOURCES
     private static void killAll(BufferedReader is, PrintWriter os, BufferedReader scanner, Socket socket) {
         try {
             is.close();
             os.close();
             scanner.close();
             socket.close();
-            System.out.println("Conexão Finalizada.");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
