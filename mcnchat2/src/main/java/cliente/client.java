@@ -24,7 +24,6 @@ public class client {
             e.printer
         }
 
-        System.out.println("Mensagem: ");
         String resp = null;
         try {
             msg = scanner.readLine();
@@ -76,7 +75,7 @@ public class client {
         }
     }
 
-    //METHD TO DESTROY ALL RESOURCES
+    //METHOD TO DESTROY ALL RESOURCES
     private static void killAll(BufferedReader is, PrintWriter os, BufferedReader scanner, Socket socket) {
         try {
             is.close();
