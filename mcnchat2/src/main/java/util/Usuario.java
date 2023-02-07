@@ -6,6 +6,7 @@ public class Usuario {
     private String username;
     private String password;
 
+    //GETTERS AND SETTERS
     public int getId_user() {
         return id_user;
     }
@@ -25,11 +26,13 @@ public class Usuario {
         this.password = password;
     }
 
+    //USER OBJECT CONSTRUCTOR (ID + USERNAME)
     public Usuario(int id_user, String username) {
         this.id_user = id_user;
         this.username = username;
     }
 
+    //USER OBJECT CONSTRUCTOR (USERNAME + PASSWORD | OVERLOADED)
     public Usuario(String username, String password) {
         this.username = username;
         this.password = password;
