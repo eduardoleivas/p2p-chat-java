@@ -53,6 +53,7 @@ public class FlistController {
     private String lastMsg = "default";
     private int port;
 
+    //INITIALIZES RESOURCES
     public void initialize() throws IOException {
         try {
             socket = ConnectionFactory.getConnection();
@@ -62,15 +63,14 @@ public class FlistController {
             Thread clientListener = new Thread(() -> {
                 try {
                     while (true) {
-                        String clientMsg = is.readLine(); //LÊ A MENSAGEM NO INPUT STREAM (CHARSET UTF)
+                        String clientMsg = is.readLine(); //READS INPUTSTREAM MESSAGES (UTF CHARSET)
                         if (!clientMsg.equals(null)) {
                             if(!clientMsg.equals(lastMsg)) {
                                 lastMsg = clientMsg;
                                 Platform.runLater(new Runnable() {
                                     @Override
                                     public void run() {
-                                        checkMsg(clientMsg);//EXIBE A MENSAGEM NA TELA
-                                        System.out.println(clientMsg);
+                                        checkMsg(clientMsg); //PRE-PROCCESS THE MESSAGES AND SHOW THEM ON THE CHAT BOX
                                     }
                                 });
                             }
@@ -86,10 +86,8 @@ public class FlistController {
             killAll(socket, is, os);
         }
     }
-    //LOGIN REQUEST ----
-    //DB GET ID BY USERNAME ----
-    //CARREGAR A FRIEND LIST
-    //SET STATUS ONLINE
+
+    //USER LOGIN TO START THE FRIEND LIST
     private void startFlist(BufferedReader is, PrintWriter os) {
         // -- LOGIN REQUEST -- //
         sendMsg(os, "/loginRequest:"+user.getUsername()+";"+user.getPassword());
@@ -99,65 +97,58 @@ public class FlistController {
         sendMsg(os, "/userIdRequest:"+user.getUsername());
         // -- USER OBJECT COMPLETE -- //
 
+        // -- GET USER IP -- //
         lblIp.setText(String.valueOf(socket.getInetAddress()));
+        // -- IP LABEL UPDATED --//
     }
 
+    //METHOD TO SEND MESSAGES
     private void sendMsg(PrintWriter os, String msg) {
         os.println(msg);
         os.flush();
     }
 
+    //RECEIVED MESSAGE PRE-PROCCESSING
     private void checkMsg(String msg) {
-        //COMANDO LOGINSTATUS
+        
+        //COMMAND LOGINSTATUS
         if (msg.contains("/loginStatus:")) {
-            String[] msgContent = msg.split(":"); //SEPARA O COMANDO DOS ARGUMENTOS
+            String[] msgContent = msg.split(":"); //SPLITS COMMANDS FROM ARGUMENTS
 
-            //USUARIO LOGADO COM SUCESSO
+            //USER SUCCESSFULLY LOGGED IN
             if (msgContent[1].equals("1")) {
-                lblUser.setText(user.getUsername());    //EXIBE O NOME DO USUARIO NA FLIST
-                user.setPassword(null);                 //NAO GUARDA MAIS A SENHA DO USUARIO
-                System.out.println("Logado com Sucesso");
-
-            //LOGIN INCORRETO
-            } else if (msgContent[1].equals("0")) {
-                System.out.println("Login Incorreto");
-
-            //USUÁRIO JÁ LOGADO
-            } else {
-                System.out.println("Usuário já logado");
+                lblUser.setText(user.getUsername());    //SHOWS USERNAME ON FRIEND LIST GUI
+                user.setPassword(null);                 //DESTROYS USER'S STORED PASSWORD
             }
         }
 
-        //COMANDO RETURNUSERID
+        //COMMANDS RETURNUSERID
         if (msg.contains("/userIdReturn:")) {
-            String[] msgContent = msg.split(":"); //SEPARA O COMANDO DOS ARGUMENTOS
+            String[] msgContent = msg.split(":"); //SPLITS COMMANDS FROM ARGUMENTS
             int id = Integer.parseInt(msgContent[1]);
             user.setId_user(id);
-            System.out.println("Seu ID é: " + id);
         }
 
-        //COMANDO LOADFRIENDS
+        //COMMAND LOADFRIENDS
         if (msg.contains("/loadFriends:")) {
-            String[] msgContent = msg.split(":"); //SEPARA O COMANDO DOS ARGUMENTOS
+            String[] msgContent = msg.split(":"); //SPLITS COMMANDS FROM ARGUMENTS
             if(msgContent.length > 1) {
                 allFriends = msgContent[1];
-                System.out.println("O CARA TEM AMIGO");
             } else {
                 allFriends = null;
             }
         }
-        //COMANDO LOADONLINEFRIENDS
+        //COMMAND LOADONLINEFRIENDS
         if (msg.contains("/loadOnlineFriends:")) {
-            String[] msgContent = msg.split(":"); //SEPARA O COMANDO DOS ARGUMENTOS
+            String[] msgContent = msg.split(":"); //SPLITS COMMANDS FROM ARGUMENTS
             if(msgContent.length > 1) {
                 onlineFriends = msgContent[1];
-                System.out.println("O CARA TEM AMIGO ON");
             } else {
                 onlineFriends = null;
             }
         }
 
-        //COMANDO CONNECTTOUSER
+        //COMMAND CONNECTTOUSER
         if (msg.contains("/connectToUserServer:")) {
 
             // -- SPLIT COMMAND CONTENTS -- //
@@ -209,7 +200,6 @@ public class FlistController {
             if(online != null) {
                 for (int i = 0; i < online.length; i++) {
                     allFriends = allFriends.replace(online[i] + ";", "");
-                    System.out.println(allFriends);
                 }
             }
             offline = allFriends.split(";");
@@ -227,14 +217,13 @@ public class FlistController {
             }
         }
     }
-    //ANCHORPANE + 26PX
-    //NAME 6PX 4PX
-    //STATUS 195PX 4PX
-    //LINE 98PX 25PX
+
+    //METHOD CREATE FRIEND LIST'S CONTACTS LABELS
     private void createLabels(String username, boolean status) {
         // -- UPDATE ANCHORPANE SIZE -- //
         lstBox.setPrefHeight(lstBox.getHeight() + 26);
 
+        //IF CONTACT IS ONLINE
         if (status == true) {
             // -- CREATE USERNAME LABEL -- //
             Label lblFriendName = new Label();
@@ -263,6 +252,8 @@ public class FlistController {
             lblFriendStatus.setLayoutY(4 + (counter * 26));
             lblFriendStatus.setText("Online");
             lblFriendStatus.setTextFill(lblFriendStatusDefault.getTextFill());
+            
+        //IF CONTACT IS OFFLINE
         } else {
             // -- CREATE USERNAME LABEL -- //
             Label lblFriendName = new Label();
@@ -295,6 +286,7 @@ public class FlistController {
         counter++; //UPDATE COUNTER
     }
 
+    //METHOD CLOSE ALL RESOURCES
     private void killAll(Socket socket, BufferedReader is, PrintWriter os) {
         try {
             msg = "/delClient:"+user.getUsername();
@@ -309,10 +301,7 @@ public class FlistController {
         }
     }
 
-    //STARTAR O CLIENT-SERVER NA PORTA X --
-    //ENVIAR PORTA, USERNAME E ALVO --
-    //CONECTAR O CLIENT NO SERVER
-    //INICIAR O CHAT
+    //CONNECT FRIEND TO SERVER
     public void friendConnect(String fUsername) throws IOException {
         Random rand = new Random(System.currentTimeMillis());
         int port = rand.nextInt((65000 - 300)) + 300;
@@ -336,12 +325,11 @@ public class FlistController {
             });
         });
         chat.start();
-        //REQUEST DE CONEXAO PARA OUTRO CLIENTE
+        //CONNECTION REQUEST TO ANOTHER CLIENT
         sendMsg(os, "/requestFriendConnection:"+port+";"+user.getUsername()+";"+fUsername);
-
     }
 
-    @javafx.fxml.FXML
+    @javafx.fxml.FXML //METHOD REFRESH FRIENDS
     public void refreshFriends(ActionEvent actionEvent) {
         loadFriends(is, os);
     }
