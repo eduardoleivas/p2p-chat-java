@@ -28,7 +28,7 @@ public class ClientController {
 
     private static Usuario user;
 
-    @javafx.fxml.FXML //CONECTA O CLIENTE AO SERVIDOR
+    @javafx.fxml.FXML //CONNECTS CLIENT TO SERVER
     public void clientConnect(ActionEvent actionEvent) {
         String host = txtHost.getText();
         int port = Integer.parseInt(txtPort.getText());
@@ -37,7 +37,7 @@ public class ClientController {
         startChat();
     }
 
-    //INICIA A LISTA DE AMIGOS APÓS LOGIN EFETUADO
+    //INITIALIZES THE FRIEND LIST AFTER USER LOGIN
     private void startChat() {
         try {
             Stage clChat = new Stage();
@@ -55,7 +55,7 @@ public class ClientController {
         }
     }
 
-    //MÉTODO RETORNA A INFO DO USUÁRIO
+    //METHOD TO RETURN USER INFO
     public static Usuario getUser() {
         return user;
     }
