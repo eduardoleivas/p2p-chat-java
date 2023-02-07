@@ -47,14 +47,11 @@ public class SChatController {
     private int dist = 20;
     private boolean firstMsg = true;
 
+    //INITIALIZES THE NECESSARY RESOURCES
     public void initialize() throws IOException {
         try {
-            //INICIALIZA OS RECURSOS NECESSÁRIOS
-            server = ConnectionFactory.getServer(); //INICIALIZA O SOCKET DO SERVIDOR
-            System.out.println("FXML STARTED = Aguardando conexão...");
-            System.out.println(server.getInetAddress() + " | " + server.getLocalPort());
-            System.out.println(server.getLocalSocketAddress());
-            socket = server.accept(); //ACEITA A CONEXÃO RECEBIDA
+            server = ConnectionFactory.getServer(); //STARTS SERVER SOCKET
+            socket = server.accept(); //ACCEPTS RECEIVED CONNECTION
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -63,18 +60,17 @@ public class SChatController {
         Thread clientListener = new Thread(() -> {
             try {
                 while (true) {
-                    String clientMsg = dIn.readUTF(); //LÊ A MENSAGEM NO INPUT STREAM (CHARSET UTF)
+                    String clientMsg = dIn.readUTF(); //READS INPUTSTREAM MESSAGES (UTF CHARSET)
                     if (!clientMsg.equals(lastMsg)) {
                         lastMsg = clientMsg;
 
-                        //CASO O CLIENTE ENVIE /USERNAME
+                        //IF CLIENT SENDS /USERNAME
                         if (clientMsg.contains("/username")) {
                             String user[] = clientMsg.split(",");
                             clUser = user[1];
 
-                            //CASO O CLIENTE ENVIE /QUIT
+                        //IF CLIENT SENDS /QUIT
                         } else if (clientMsg.equals("/quit")) {
-                            System.out.println("Conexão Encerrada.");
                             dIn.close();
                             dOut.close();
                             socket.close();
@@ -88,11 +84,10 @@ public class SChatController {
                             });
                             break;
                         } else {
-                            System.out.println(clientMsg);
                             Platform.runLater(new Runnable() {
                                 @Override
                                 public void run() {
-                                    clAddLabel(clientMsg);//EXIBE A MENSAGEM NA TELA
+                                    clAddLabel(clientMsg); //SHOWS THE MESSAGE ON THE CHAT BOX
                                 }
                             });
                         }
@@ -105,10 +100,12 @@ public class SChatController {
         clientListener.start();
     }
 
+    //METHOD SET SERVER USER
     public void setSvUser(String username) {
         svUser = username;
     }
-
+    
+    //METHOD SHOW SERVER MESSAGES
     private void svAddLabel(String txt) {
         setSvUser(((Stage) lblBase.getScene().getWindow()).getTitle());
         Label lblMsg = new Label(svUser + ": " + txt);
@@ -120,6 +117,7 @@ public class SChatController {
         msg++;
     }
 
+    //METHOD SHOW CLIENT MESSAGES
     private void clAddLabel(String txt) {
         setSvUser(((Stage) lblBase.getScene().getWindow()).getTitle());
         Label lblMsg = new Label(clUser + ": " + txt);
@@ -131,11 +129,10 @@ public class SChatController {
         msg++;
     }
 
-    @FXML
+    @FXML //METHOD CLOSE CONNECTION
     void closeConnection(ActionEvent event) throws IOException {
         String quit = "/quit";
-        dOut.writeUTF(quit); //ESCREVE A MENSAGEM NO OUTPUT STREAM (CHARSET UTF)
-        System.out.println("Conexão Encerrada.");
+        dOut.writeUTF(quit); //WRITES MESSAGE ON OUTPUTSTREAM (UTF CHARSET)
         dIn.close();
         dOut.close();
         socket.close();
@@ -144,30 +141,30 @@ public class SChatController {
         chat.close();
     }
 
-    @FXML
+    @FXML //METHOD SEND MESSAGE
     void sendMessage(ActionEvent event){
         try {
+            //IF IT'S THE FIRST MESSAGE
             if(firstMsg) {
-                sendUser();
+                sendUser(); //SENDS USER DATA WITH IT
                 firstMsg = false;
             }
-            //SERVIDOR ENVIA A MENSAGEM
+            
+            //CLIENT-SERVER SENDS THE MESSAGE
             String serverMsg = txtField.getText();
-            dOut.writeUTF(serverMsg); //ESCREVE A MENSAGEM NO OUTPUT STREAM (CHARSET UTF)
-            System.out.println(serverMsg);
-            svAddLabel(serverMsg);    //EXIBE A MENSAGEM NA TELA
+            dOut.writeUTF(serverMsg); //WRITES MESSAGE ON OUTPUTSTREAM (UTF CHARSET)
+            svAddLabel(serverMsg);    //SHOWS THE MESSAGE ON THE CHAT BOX
             txtField.clear();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
+    //METHOD SEND USER
     void sendUser() {
         try {
-            //SERVIDOR ENVIA A MENSAGEM
             String serverMsg = ((Stage) lblBase.getScene().getWindow()).getTitle();
-            dOut.writeUTF("/username," + serverMsg); //ESCREVE A MENSAGEM NO OUTPUT STREAM (CHARSET UTF)
-            System.out.println("Username: " + serverMsg);
+            dOut.writeUTF("/username," + serverMsg); //WRITES MESSAGE ON OUTPUTSTREAM (UTF CHARSET)
         } catch (IOException e) {
             e.printStackTrace();
         }
