@@ -5,7 +5,8 @@ public class ClientHandler {
     private String username;
     private String ip;
     private ServerThread st;
-
+    
+    //GETTERS AND SETTERS
     public String getUsername() {
         return username;
     }
@@ -25,6 +26,7 @@ public class ClientHandler {
         this.st = st;
     }
 
+    //CLIENTHANDLER CONSTRUCTOR
     public ClientHandler(String username, String ip, ServerThread st) {
         this.username = username;
         this.ip = ip;
