@@ -49,15 +49,10 @@ public class client {
             String[] msgContent = msg.split(":"); //SEPARA O COMANDO DOS ARGUMENTOS
             if (msgContent[1].equals("1")) {
                 //USUARIO LOGADO COM SUCESSO
-                    //DB GET ID BY USERNAME
-                    //CARREGAR A FRIEND LIST
-                    //SET STATUS ONLINE
                 user = new Usuario(-1, username);
-                System.out.println(msgContent[1]);
                 System.out.println("Logado com Sucesso");
             } else if (msgContent[1].equals("0")) {
                 //LOGIN INCORRETO
-                System.out.println(msgContent[1]);
                 System.out.println("Login Incorreto");
             } else {
                 //USUÁRIO JÁ LOGADO
@@ -70,17 +65,14 @@ public class client {
             String[] msgContent = msg.split(":"); //SEPARA O COMANDO DOS ARGUMENTOS
             int id = Integer.parseInt(msgContent[1]);
             user.setId_user(id);
-            System.out.println("Seu ID é: " + id);
         }
 
         //COMANDO LOADFRIENDS
         if (msg.contains("/loadFriends:")) {
             String[] msgContent = msg.split(":"); //SEPARA O COMANDO DOS ARGUMENTOS
             String[] msgUsernames = msgContent[1].split(";"); //ARRAY COM OS AMIGOS
-            for(int i=0; i<msgUsernames.length; i++) {
-                System.out.println(msgUsernames[i]);
-            }
         }
+        
         //COMANDO LOADONLINEFRIENDS
         if (msg.contains("/loadOnlineFriends:")) {
             String[] msgContent = msg.split(":"); //SEPARA O COMANDO DOS ARGUMENTOS
