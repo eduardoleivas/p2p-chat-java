@@ -1,4 +1,4 @@
-# p2p-chat-redes
+# p2p-chat-java
 Chat P2P Cliente/Servidor implementado na linguagem Java, o projeto conta com:
 
 Aplicativo Servidor
