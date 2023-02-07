@@ -19,25 +19,23 @@ public class server {
             // -- GET & MOUNT SERVER INFO -- //
             String sIp = server.getIp();
             String sPort = Integer.toString(port);
-            System.out.println(sIp + " | " + port);
 
             // -- SEND CONNECT COMMAND TO FRIEND -- //
             amigo.getSt().sendMsg(sIp, sPort);
             return 1;
         } catch (IOException e) {
+            e.printstacktrace();
         }
         return 0;
     }
 
+    //METHOD ADD CLIENTS TO CLIENTHANDLER
     public static void addClients(String username, String ip, ServerThread st) {
         ClientHandler client = new ClientHandler(username, ip, st);
         clients.add(client);
-
-        for(int i = 0; i < clients.size(); i++) {
-            System.out.println(clients.get(i).getIp());
-        }
     }
 
+    //METHOD DELETE CLIENTHANDLER
     public static ClientHandler delClient(String username) {
         for(int i = 0; i < clients.size(); i++) {
             if(clients.get(i).getUsername().equals(username)) {
@@ -47,6 +45,7 @@ public class server {
         return null;
     }
 
+    //METHOD FIND CLIENT'S INFOS
     private static ClientHandler findClient(String username) {
         for(int i = 0; i < clients.size(); i++) {
             if(clients.get(i).getUsername().equals(username)) {
@@ -56,26 +55,23 @@ public class server {
         return null;
     }
 
+    //MAIN METHOD 
     public static void main(String s[]) throws Exception {
-        Socket socket = null;             //SOCKET QUE SERÁ ATUALIZADO PARA CADA CLIENTE
-        ServerSocket serverSocket = null; //SOCKET QUE SERÁ INICIALIZADO PARA O SERVIDOR
+        Socket socket = null;             //SOCKET THAT WILL BE UPDATED FOR THE CLIENT
+        ServerSocket serverSocket = null; //SOCKET THAT WILL BE UPDATED FOR THE SERVER
         try {
-            serverSocket = new ServerSocket(4445); //SOCKET PRINCIPAL DO SERVIDOR
-            System.out.println("Aguardando conexão");
+            serverSocket = new ServerSocket(4445); //SERVER'S MAIN SOCKET
         } catch(IOException e) {
-            System.out.println("Erro ao iniciar o main.java.servidor");
             e.printStackTrace();
         }
 
-        //ENQUANTO O SERVIDOR ESTIVER ABERTO
+        //WHILE SERVER IS ACTIVE
         while(true) {
             try {
-                socket = serverSocket.accept();             //ACEITA A CONEXÃO DO CLIENTE
-                ServerThread st = new ServerThread(socket); //CRIA UM NOVO THREAD COM O CLIENTE CONECTADO
-                st.start();                                 //INICIA O THREAD DO SOCKET CLIENTE(X) - SERVIDOR
-                System.out.println("Conectado com sucesso");
+                socket = serverSocket.accept();             //ACCEPTS CLIENT'S CONNECTION REQUEST
+                ServerThread st = new ServerThread(socket); //CREATES A NEW THREAAD WITH THE CONNECTED CLIENT
+                st.start();                                 //INITIALIZES THE CLIENT(X)'S SOCKET - SERVER
             } catch (IOException e) {
-                System.out.println("Erro de Conexão");
                 e.printStackTrace();
 
             }
