@@ -6,16 +6,16 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 public class ConnectionFactory {
-    private static Socket client;        //CRIA UM SOCKET
-    private static ServerSocket sClient; //SOCKET DE CLIENT-SERVER
-    private static Socket cClient;       //SOCKET DE CLIENT-CHAT
+    private static Socket client;        //CREATES A SOCKET
+    private static ServerSocket sClient; //SOCKET FOR CLIENT-SERVER
+    private static Socket cClient;       //SOCKET FOR CLIENT-CHAT
 
-    //INICIA A CONEXÃO
+    //STARTS SERVER CONNECTION
     public static void connectionFactory(String host, int port) {
         client = createSocket(host, port);
     }
 
-    //INICIA A CONEXÃO
+    //STARTS CLIENT-CHAT CONNECTION
     public static void createCSocket(String host, int port) {
         cClient = createSocket(host, port);
     }
@@ -34,19 +34,20 @@ public class ConnectionFactory {
         return temp;
     }
 
-    //MÉTODO CRIAR SERVIDOR
+    //METHOD CREATE A SERVER
     public static void createServer(int port) {
         ServerSocket serverSocket = null; //SOCKET QUE SERÁ INICIALIZADO PARA O CLIENT-SERVER
         try {
             serverSocket = new ServerSocket(port); //SOCKET DO CLIENT-SERVER
             sClient = serverSocket;
         
-        //ERRO NA INICIALIZAÇÃO
+        //INITIALIZATION ERROR
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
     
+    //GETTERS
     public static ServerSocket getServer() {
         return sClient;
     }
